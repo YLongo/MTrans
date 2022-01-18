@@ -2,6 +2,8 @@ package com.swjtu.http;
 
 import com.swjtu.lang.LANG;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -22,12 +24,18 @@ public abstract class AbstractHttpAttribute {
     public Map<String, String> formData;
     public Map<LANG, String> langMap;
     public CloseableHttpClient httpClient;
+    HttpHost proxy = new HttpHost("127.0.0.1", 1080, "http");
+
+    //把代理设置到请求配置
+    RequestConfig defaultRequestConfig = RequestConfig.custom()
+            .setProxy(proxy)
+            .build();
 
     public AbstractHttpAttribute(String url) {
         this.url = url;
         this.formData = new HashMap<>();
         this.langMap = new HashMap<>();
-        this.httpClient = HttpClients.createDefault();
+        this.httpClient = HttpClients.custom().setDefaultRequestConfig(defaultRequestConfig).build();
     }
 
     /**
